@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +8,13 @@
     <link href="./dist/output.css" rel="stylesheet">
     <script type="module" src="./app.js" defer></script>
 </head>
+
 <body class="bg-gray-50 text-gray-800">
 
     <!-- Responsive Sticky Navbar -->
     <nav class="sticky top-0 z-50 bg-white shadow-md">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            
+
             <!-- Logo -->
             <a href="index.html" class="text-2xl font-bold text-orange-600">pasa-foods</a>
 
@@ -29,27 +31,48 @@
                 <!-- Cart Icon -->
                 <a href="cart.html" class="relative group">
                     <img src="./assets/frontend_assets/basket_icon.png" alt="Cart" class="w-7 h-7">
-                    <span class="absolute -top-2 -right-2 bg-orange-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    <span
+                        class="absolute -top-2 -right-2 bg-orange-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
                 </a>
 
                 <!-- Login Button -->
-                 <a href="#" class="hidden md:block px-6 py-2 border border-orange-600 text-orange-600 rounded-full hover:bg-orange-50 transition-colors">Login</a>
-                
+                <a href="#"
+                    class="hidden md:block px-6 py-2 border border-orange-600 text-orange-600 rounded-full hover:bg-orange-50 transition-colors">Login</a>
+
                 <!-- Mobile Menu Button (Hamburger) -->
                 <button class="md:hidden text-gray-700 focus:outline-none">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7" />
                     </svg>
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- Page Content Placeholder -->
-    <main class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center mt-10">Welcome to Pasa Foods</h1>
-        <p class="text-center text-gray-500 mt-2">Delicious food delivered to your doorstep.</p>
+    <!-- Page Content -->
+    <main>
+        <!-- Hero Section -->
+        <header id="hero-section" class="relative bg-gray-50 overflow-hidden">
+            <!-- Content injected by app.js -->
+        </header>
+
+        <!-- Category Section -->
+        <section id="explore-menu" class="container mx-auto px-4 py-12">
+            <div class="text-center mb-10 text-white">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Explore our menu</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Choose from a diverse menu featuring a delectable array of
+                    dishes crafted with the finest ingredients and culinary expertise.</p>
+            </div>
+
+            <div id="category-list"
+                class="flex md:grid md:grid-cols-4 lg:grid-cols-8 gap-8 overflow-x-auto pb-6 scrollbar-hide px-2">
+                <!-- Categories injected by app.js -->
+            </div>
+            <hr class="my-10 border-gray-200 h-0.5 bg-gray-200 border-none mx-4">
+        </section>
     </main>
 
 </body>
+
 </html>
