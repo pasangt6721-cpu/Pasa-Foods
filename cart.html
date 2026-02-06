@@ -2,59 +2,95 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart - Pasa Foods</title>
-    <link href="./dist/output.css" rel="stylesheet">
-    <script type="module" src="./app.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart - Pasa Foods</title>
+
+  <!-- Tailwind build -->
+  <link href="./dist/output.css" rel="stylesheet" />
+
+  <!-- App JS -->
+  <script type="module" src="./app.js" defer></script>
 </head>
 
 <body class="bg-gray-50 text-gray-800">
 
-    <!-- Responsive Sticky Navbar -->
-    <nav class="sticky top-0 z-50 bg-white shadow-md">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+  <!-- ================= NAVBAR ================= -->
+  <nav class="sticky top-0 z-50 bg-white shadow-md">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
 
-            <!-- Logo -->
-            <a href="index.html" class="text-2xl font-bold text-orange-600">pasa-foods</a>
+      <!-- Logo -->
+      <a href="index.html" class="text-2xl font-bold text-orange-600">
+        pasa-foods
+      </a>
 
-            <!-- Desktop Links -->
-            <ul class="hidden md:flex space-x-8 font-medium items-center">
-                <li><a href="index.html" class="hover:text-orange-600 transition-colors">Home</a></li>
-                <li><a href="menu.html" class="hover:text-orange-600 transition-colors">Menu</a></li>
-                <li><a href="about.html" class="hover:text-orange-600 transition-colors">About</a></li>
-                <li><a href="contact.html" class="hover:text-orange-600 transition-colors">Contact</a></li>
-            </ul>
+      <!-- Desktop Links -->
+      <ul class="hidden md:flex space-x-8 font-medium items-center">
+        <li><a href="index.html" class="hover:text-orange-600">Home</a></li>
+        <li><a href="menu.html" class="hover:text-orange-600">Menu</a></li>
+        <li><a href="about.html" class="hover:text-orange-600">About</a></li>
+        <li><a href="contact.html" class="hover:text-orange-600">Contact</a></li>
+      </ul>
 
-            <!-- Right Actions -->
-            <div class="flex items-center space-x-6">
-                <!-- Cart Icon -->
-                <a href="cart.html" class="relative group">
-                    <img src="./assets/frontend_assets/basket_icon.png" alt="Cart" class="w-7 h-7">
-                    <span
-                        class="absolute -top-2 -right-2 bg-orange-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
-                </a>
+      <!-- Right Actions -->
+      <div class="flex items-center space-x-6">
 
-                <!-- Login Button -->
-                <a href="#"
-                    class="hidden md:block px-6 py-2 border border-orange-600 text-orange-600 rounded-full hover:bg-orange-50 transition-colors">Login</a>
+        <!-- Cart Icon -->
+        <a href="cart.html" class="relative group">
+          <img
+            src="./assets/frontend_assets/basket_icon.png"
+            alt="Cart"
+            class="w-7 h-7"
+          />
+          <!-- 🔥 IMPORTANT: cart-count class -->
+          <span
+            class="cart-count absolute -top-2 -right-2 bg-orange-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+            0
+          </span>
+        </a>
 
-                <!-- Mobile Menu Button (Hamburger) -->
-                <button class="md:hidden text-gray-700 focus:outline-none">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16m-7 6h7" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </nav>
+        <!-- Login -->
+        <a
+          href="#"
+          class="hidden md:block px-6 py-2 border border-orange-600 text-orange-600 rounded-full hover:bg-orange-50 transition">
+          Login
+        </a>
 
-    <!-- Page Content Placeholder -->
-    <main class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center mt-10">Your Cart</h1>
-        <p class="text-center text-gray-500 mt-2">Review your selected items.</p>
-    </main>
+        <!-- Mobile Menu -->
+        <button class="md:hidden text-gray-700">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= CART PAGE ================= -->
+  <main class="container mx-auto px-4 py-10">
+
+    <h1 class="text-3xl font-bold mb-8">
+      Your Cart
+    </h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      <!-- Cart Items -->
+      <div class="md:col-span-2 space-y-4" id="cart-items">
+        <!-- Items injected by JS -->
+      </div>
+
+      <!-- Cart Summary -->
+      <div
+        id="cart-summary"
+        class="bg-white p-6 rounded-xl shadow h-fit">
+        <!-- Summary injected by JS -->
+      </div>
+
+    </div>
+
+  </main>
 
 </body>
 

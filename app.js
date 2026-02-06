@@ -1,184 +1,267 @@
+// ================================
+// IMPORT ASSETS & DATA
+// ================================
+import {
+  assets,
+  menu_list,
+  food_list,
+} from "./assets/frontend_assets/assets.js";
 
-// Import assets
-import { assets, menu_list, food_list } from './assets/frontend_assets/assets.js';
+console.log("Pasa-Foods App Initialized");
 
-console.log("App initialized");
+// ================================
+// CART HELPERS
+// ================================
+function getCart() {
+  return JSON.parse(localStorage.getItem("pasa-cart")) || [];
+}
 
-// --- Home Page Logic ---
+function saveCart(cart) {
+  localStorage.setItem("pasa-cart", JSON.stringify(cart));
+}
 
+function updateCartBadge() {
+  const cart = getCart();
+  const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+  document.querySelectorAll(".cart-count").forEach(
+    (el) => (el.textContent = totalQty)
+  );
+}
+
+// ================================
+// ADD TO CART
+// ================================
+function addToCart(id) {
+  let cart = getCart();
+  const existing = cart.find((i) => i.id === id);
+
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({ id, qty: 1 });
+  }
+
+  saveCart(cart);
+  updateCartBadge();
+}
+
+// Bind buttons AFTER render
+function bindAddToCartButtons() {
+  document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      addToCart(btn.dataset.id);
+    });
+  });
+}
+
+// ================================
+// HOME PAGE
+// ================================
 function renderHero() {
-    const hero = document.getElementById('hero-section');
-    if (!hero) return;
+  const hero = document.getElementById("hero-section");
+  if (!hero) return;
 
-    hero.innerHTML = `
-        <div class="container mx-auto px-4 py-12 md:py-24 flex flex-col md:flex-row items-center gap-10">
-            <div class="flex-1 space-y-6 text-center md:text-left animate-fade-in-up">
-                <h1 class="text-4xl md:text-6xl font-bold leading-tight text-gray-900">
-                    Order your favourite <br class="hidden md:block">food here
-                </h1>
-                <p class="text-gray-600 text-lg max-w-md mx-auto md:mx-0">
-                    Choose from a diverse menu featuring a delectable array of dishes crafted with the finest ingredients and culinary expertise.
-                </p>
-                <a href="menu.html" class="inline-block bg-orange-600 text-white px-8 py-3 rounded-full font-medium hover:bg-orange-700 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 duration-300">
-                    View Menu
-                </a>
-            </div>
-            <div class="flex-1 relative w-full h-auto max-w-lg md:max-w-2xl mx-auto md:ml-auto">
-                 <img src="${assets.header_img}" alt="Delicious Food" class="w-full h-auto object-contain md:object-cover object-center rounded-none md:rounded-lg shadow-none md:shadow-lg">
-            </div>
-        </div>
-    `;
+  hero.innerHTML = `
+    <div class="container mx-auto px-4 py-12 md:py-24 flex flex-col md:flex-row items-center gap-10">
+      <div class="flex-1 space-y-6 text-center md:text-left">
+        <h1 class="text-4xl md:text-6xl font-bold text-gray-900">
+          Order your favourite <br class="hidden md:block">food here
+        </h1>
+        <p class="text-gray-600 text-lg max-w-md mx-auto md:mx-0">
+          Choose from a diverse menu of delicious meals.
+        </p>
+        <a href="menu.html"
+          class="inline-block bg-orange-600 text-white px-8 py-3 rounded-full hover:bg-orange-700 transition">
+          View Menu
+        </a>
+      </div>
+      <div class="flex-1">
+        <img src="${assets.header_img}" class="w-full max-w-xl mx-auto">
+      </div>
+    </div>
+  `;
 }
 
 function renderCategories() {
-    const container = document.getElementById('category-list');
-    if (!container) return;
+  const container = document.getElementById("category-list");
+  if (!container) return;
 
-    let activeCategory = ''; // Default to none, or could match URL params
+  let active = "";
 
-    const updateRender = () => {
-        container.innerHTML = menu_list.map(item => {
-            const isActive = activeCategory === item.menu_name;
-            const activeClass = isActive ? 'border-orange-600 p-0.5 scale-105' : 'border-transparent p-1';
-            const textClass = isActive ? 'text-gray-900 underline decoration-orange-600 decoration-2 underline-offset-4' : 'text-gray-600';
+  const render = () => {
+    container.innerHTML = menu_list
+      .map((cat) => {
+        const isActive = active === cat.menu_name;
+        return `
+          <div class="category-item cursor-pointer flex flex-col items-center gap-2"
+               data-name="${cat.menu_name}">
+            <div class="w-24 h-24 rounded-full border-4 ${
+              isActive ? "border-orange-600" : "border-transparent"
+            } overflow-hidden bg-orange-100">
+              <img src="${cat.menu_image}" class="w-full h-full object-cover">
+            </div>
+            <p class="${
+              isActive ? "text-orange-600 font-bold" : "text-gray-600"
+            }">${cat.menu_name}</p>
+          </div>
+        `;
+      })
+      .join("");
 
-            return `
-                <div class="category-item min-w-[100px] flex flex-col items-center justify-center gap-3 cursor-pointer group transition-all duration-300" data-name="${item.menu_name}">
-                    <div class="w-24 h-24 rounded-full border-4 ${activeClass} transition-all duration-300 bg-orange-100 overflow-hidden flex items-center justify-center">
-                        <img src="${item.menu_image}" alt="${item.menu_name}" class="w-full h-full object-cover object-center">
-                    </div>
-                    <p class="${textClass} text-lg font-medium group-hover:text-orange-600 transition-colors text-center whitespace-nowrap">${item.menu_name}</p>
-                </div>
-            `;
-        }).join('');
+    container.querySelectorAll(".category-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        active = item.dataset.name;
+        render();
+      });
+    });
+  };
 
-        // Re-attach listeners
-        container.querySelectorAll('.category-item').forEach(item => {
-            item.addEventListener('click', () => {
-                activeCategory = item.dataset.name;
-                updateRender();
-                // Optional: navigate to relevant section or simple visual toggle
-            });
-        });
-    };
-
-    updateRender();
+  render();
 }
 
-
-// --- Menu Page Logic ---
-
+// ================================
+// MENU PAGE
+// ================================
 function renderMenuPage() {
-    const filterContainer = document.getElementById('category-filter');
-    const foodContainer = document.getElementById('food-display');
+  const filterContainer = document.getElementById("category-filter");
+  const foodContainer = document.getElementById("food-display");
+  if (!filterContainer || !foodContainer) return;
 
-    if (!filterContainer || !foodContainer) return;
+  let activeCategory = "All";
 
-    let activeCategory = "All";
+  const renderFilters = () => {
+    const list = [{ menu_name: "All" }, ...menu_list];
 
-    // render Filters
-    const renderFilters = () => {
-        // Add "All" option
-        let html = '';
+    filterContainer.innerHTML = list
+      .map((cat) => {
+        const isActive = activeCategory === cat.menu_name;
+        return `
+          <button
+            class="px-4 py-2 rounded-full border ${
+              isActive
+                ? "bg-orange-600 text-white"
+                : "bg-white text-gray-700"
+            } filter-btn"
+            data-name="${cat.menu_name}">
+            ${cat.menu_name}
+          </button>
+        `;
+      })
+      .join("");
 
-        // Render helper
-        const createFilterItem = (name, image) => {
-            const isActive = activeCategory === name;
-            const activeClass = isActive ? 'bg-orange-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100';
-            // If image is provided, use it, else just text pill
-            return `
-                 <button class="filter-btn px-4 py-2 rounded-full border transition-colors ${activeClass}" data-name="${name}">
-                    ${name}
-                 </button>
-            `;
-        }
+    filterContainer.querySelectorAll(".filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        activeCategory = btn.dataset.name;
+        renderFilters();
+        renderFoodGrid();
+      });
+    });
+  };
 
-        // We can use a simpler visual for filters on the menu page (pills) or the round images.
-        // Let's use the round images from Home page for consistency but responsive-friendly.
+  const renderFoodGrid = () => {
+    const list =
+      activeCategory === "All"
+        ? food_list
+        : food_list.filter((f) => f.category === activeCategory);
 
-        // "All" Button
-        // Note: reusing the round style might be too large for a strict filter bar on top of grid. 
-        // Let's use horizontal scrolling round list similar to home, or simple pills. 
-        // User asked for "Category section... clickable... interactive".
-        // Let's stick to the round style but maybe slightly smaller or just reuse the logic. 
-        // Actually, let's look at the Home design: it's big round icons.
-        // For Menu page, let's use the same round icons but handle "All".
+    foodContainer.innerHTML = list
+      .map(
+        (item) => `
+      <div class="bg-white rounded-2xl shadow hover:shadow-lg flex flex-col">
+        <div class="relative h-52">
+          <img src="${item.image}" class="w-full h-full object-cover">
+          <button class="add-to-cart-btn absolute bottom-4 right-4 bg-orange-500 p-3 rounded-full"
+                  data-id="${item.id}">
+            <img src="${assets.add_icon_white}" class="w-6 h-6">
+          </button>
+        </div>
+        <div class="p-4 flex flex-col grow">
+          <h3 class="font-bold text-lg">${item.name}</h3>
+          <p class="text-sm text-gray-500 line-clamp-2">${item.description}</p>
+          <p class="mt-auto text-orange-600 font-bold text-xl">Rs ${item.price}</p>
+        </div>
+      </div>
+    `
+      )
+      .join("");
 
-        // Re-using the style from home page for consistency
-        const allImage = assets.selector_icon; // Placeholder or null
+    bindAddToCartButtons();
+  };
 
-        const list = [{ menu_name: "All", menu_image: assets.selector_icon }, ...menu_list];
-
-        filterContainer.innerHTML = list.map(item => {
-            const isActive = activeCategory === item.menu_name;
-            const activeClass = isActive ? 'border-orange-600 p-0.5 scale-105' : 'border-transparent p-1 opacity-70 hover:opacity-100';
-            const textClass = isActive ? 'text-gray-900 font-bold' : 'text-gray-500';
-
-            return `
-                <div class="filter-item flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-300 transform" data-name="${item.menu_name}">
-                    ${item.menu_image ?
-                    `<div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 ${activeClass} bg-orange-100 overflow-hidden flex items-center justify-center">
-                             <img src="${item.menu_image}" class="w-full h-full object-cover object-center">
-                         </div>` :
-                    // Fallback for "All" if no image, or specific icon
-                    `<div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 ${activeClass} bg-orange-100 flex items-center justify-center text-orange-600">
-                             All
-                         </div>`
-                }
-                    <p class="text-sm md:text-base ${textClass} text-center whitespace-nowrap">${item.menu_name}</p>
-                </div>
-             `;
-        }).join('');
-
-        // Attach listeners
-        filterContainer.querySelectorAll('.filter-item').forEach(btn => {
-            btn.addEventListener('click', () => {
-                activeCategory = btn.dataset.name;
-                renderFilters();
-                renderFoodGrid();
-            });
-        });
-    };
-
-    // Render Food Grid
-    const renderFoodGrid = () => {
-        const filteredList = activeCategory === "All"
-            ? food_list
-            : food_list.filter(item => item.category === activeCategory);
-
-        foodContainer.innerHTML = filteredList.map(item => {
-            return `
-                <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden animate-fade-in-up flex flex-col h-full">
-                    <div class="relative w-full h-48 sm:h-52 shrink-0">
-                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover object-center">
-                        <div class="absolute bottom-4 right-4 bg-white rounded-full p-1.5 shadow-sm cursor-pointer hover:bg-orange-50 transition-colors group add-to-cart-btn z-10" data-id="${item._id}">
-                             <img src="${assets.add_icon_white}" class="w-7 h-7 hidden group-hover:block filter invert-0" alt="Add">
-                             <img src="${assets.add_icon_white}" class="w-7 h-7 block group-hover:hidden filter brightness-0 invert" alt="Add">
-                             <img src="${assets.add_icon_green}" class="w-8 h-8 rounded-full" alt="Add"> 
-                        </div>
-                    </div>
-                    <div class="p-5 flex flex-col grow">
-                        <div class="flex justify-between items-start mb-2">
-                             <h3 class="text-xl font-bold text-gray-800 line-clamp-1">${item.name}</h3>
-                             <img src="${assets.rating_starts}" class="h-4 object-contain" alt="Rating"> 
-                        </div>
-                        <p class="text-gray-500 text-sm h-10 overflow-hidden mb-4 leading-snug line-clamp-2">${item.description}</p>
-                        <p class="text-2xl font-bold text-orange-600 mt-auto">$${item.price}</p>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    };
-
-    renderFilters();
-    renderFoodGrid();
+  renderFilters();
+  renderFoodGrid();
 }
 
+// ================================
+// CART PAGE
+// ================================
+function renderCart() {
+  const container = document.getElementById("cart-items");
+  const summary = document.getElementById("cart-summary");
+  if (!container || !summary) return;
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Determine page via URL or body ID/class, but simpler to just run all and let them check for elements
-    renderHero();
-    renderCategories();
-    renderMenuPage();
+  const cart = getCart();
+  container.innerHTML = "";
+  let total = 0;
+
+  cart.forEach((c) => {
+    const product = food_list.find((f) => f.id === c.id);
+    if (!product) return;
+
+    total += product.price * c.qty;
+
+    container.innerHTML += `
+      <div class="flex gap-4 bg-white p-4 rounded shadow">
+        <img src="${product.image}" class="w-20 h-20 object-cover rounded">
+        <div class="flex-1">
+          <h3 class="font-semibold">${product.name}</h3>
+          <p class="text-orange-600">Rs ${product.price}</p>
+          <div class="flex gap-2 mt-2">
+            <button onclick="changeQty('${product.id}',-1)">−</button>
+            <span>${c.qty}</span>
+            <button onclick="changeQty('${product.id}',1)">+</button>
+          </div>
+        </div>
+        <button onclick="removeFromCart('${product.id}')" class="text-red-500">✕</button>
+      </div>
+    `;
+  });
+
+  summary.innerHTML = `
+    <p class="text-lg font-bold">Total: Rs ${total}</p>
+    <button class="mt-4 bg-orange-500 text-white px-6 py-2 rounded">
+      Checkout
+    </button>
+  `;
+}
+
+function changeQty(id, amount) {
+  let cart = getCart();
+  const item = cart.find((i) => i.id === id);
+  if (!item) return;
+
+  item.qty += amount;
+  if (item.qty <= 0) cart = cart.filter((i) => i.id !== id);
+
+  saveCart(cart);
+  renderCart();
+  updateCartBadge();
+}
+
+function removeFromCart(id) {
+  let cart = getCart().filter((i) => i.id !== id);
+  saveCart(cart);
+  renderCart();
+  updateCartBadge();
+}
+
+// ================================
+// INIT
+// ================================
+document.addEventListener("DOMContentLoaded", () => {
+  renderHero();
+  renderCategories();
+  renderMenuPage();
+  renderCart();
+  updateCartBadge();
 });
-
