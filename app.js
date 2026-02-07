@@ -5,39 +5,39 @@
 // Cart Management
 const CartManager = {
   getCart() {
-    const cart = localStorage.getItem('pasaFoodsCart');
+    const cart = localStorage.getItem("pasaFoodsCart");
     return cart ? JSON.parse(cart) : [];
   },
 
   saveCart(cart) {
-    localStorage.setItem('pasaFoodsCart', JSON.stringify(cart));
+    localStorage.setItem("pasaFoodsCart", JSON.stringify(cart));
     this.updateCartBadge();
   },
 
   addItem(item) {
     const cart = this.getCart();
-    const existingItem = cart.find(i => i.id === item.id);
-    
+    const existingItem = cart.find((i) => i.id === item.id);
+
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
       cart.push({ ...item, quantity: 1 });
     }
-    
+
     this.saveCart(cart);
     this.showToast(`${item.name} added to cart!`);
   },
 
   removeItem(itemId) {
     let cart = this.getCart();
-    cart = cart.filter(i => i.id !== itemId);
+    cart = cart.filter((i) => i.id !== itemId);
     this.saveCart(cart);
   },
 
   updateQuantity(itemId, change) {
     const cart = this.getCart();
-    const item = cart.find(i => i.id === itemId);
-    
+    const item = cart.find((i) => i.id === itemId);
+
     if (item) {
       item.quantity += change;
       if (item.quantity <= 0) {
@@ -50,7 +50,7 @@ const CartManager = {
 
   getTotal() {
     const cart = this.getCart();
-    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   },
 
   getItemCount() {
@@ -59,25 +59,26 @@ const CartManager = {
   },
 
   updateCartBadge() {
-    const badges = document.querySelectorAll('.cart-badge');
+    const badges = document.querySelectorAll(".cart-badge");
     const count = this.getItemCount();
-    badges.forEach(badge => {
+    badges.forEach((badge) => {
       badge.textContent = count;
-      badge.style.display = count > 0 ? 'flex' : 'none';
+      badge.style.display = count > 0 ? "flex" : "none";
     });
   },
 
   clearCart() {
-    localStorage.removeItem('pasaFoodsCart');
+    localStorage.removeItem("pasaFoodsCart");
     this.updateCartBadge();
   },
 
   showToast(message) {
-    const existingToast = document.querySelector('.toast-notification');
+    const existingToast = document.querySelector(".toast-notification");
     if (existingToast) existingToast.remove();
 
-    const toast = document.createElement('div');
-    toast.className = 'toast-notification fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-up';
+    const toast = document.createElement("div");
+    toast.className =
+      "toast-notification fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-up";
     toast.innerHTML = `
       <div class="flex items-center gap-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,80 +90,85 @@ const CartManager = {
     document.body.appendChild(toast);
 
     setTimeout(() => {
-      toast.classList.add('animate-fade-out');
+      toast.classList.add("animate-fade-out");
       setTimeout(() => toast.remove(), 300);
     }, 2500);
-  }
+  },
 };
 
 // Auth Management
 const AuthManager = {
   isLoggedIn() {
-    return localStorage.getItem('pasaFoodsLoggedIn') === 'true';
+    return localStorage.getItem("pasaFoodsLoggedIn") === "true";
   },
 
   getCurrentUser() {
-    const user = localStorage.getItem('pasaFoodsCurrentUser');
+    const user = localStorage.getItem("pasaFoodsCurrentUser");
     return user ? JSON.parse(user) : null;
   },
 
   getUsers() {
-    const users = localStorage.getItem('pasaFoodsUsers');
+    const users = localStorage.getItem("pasaFoodsUsers");
     return users ? JSON.parse(users) : [];
   },
 
   register(name, email, password) {
     const users = this.getUsers();
-    
-    if (users.find(u => u.email === email)) {
-      return { success: false, message: 'Email already registered' };
+
+    if (users.find((u) => u.email === email)) {
+      return { success: false, message: "Email already registered" };
     }
 
     const newUser = { id: Date.now(), name, email, password };
     users.push(newUser);
-    localStorage.setItem('pasaFoodsUsers', JSON.stringify(users));
-    
-    return { success: true, message: 'Registration successful!' };
+    localStorage.setItem("pasaFoodsUsers", JSON.stringify(users));
+
+    return { success: true, message: "Registration successful!" };
   },
 
   login(email, password) {
     const users = this.getUsers();
-    const user = users.find(u => u.email === email && u.password === password);
+    const user = users.find(
+      (u) => u.email === email && u.password === password,
+    );
 
     if (user) {
-      localStorage.setItem('pasaFoodsLoggedIn', 'true');
-      localStorage.setItem('pasaFoodsCurrentUser', JSON.stringify({ id: user.id, name: user.name, email: user.email }));
+      localStorage.setItem("pasaFoodsLoggedIn", "true");
+      localStorage.setItem(
+        "pasaFoodsCurrentUser",
+        JSON.stringify({ id: user.id, name: user.name, email: user.email }),
+      );
       this.updateNavbar();
-      return { success: true, message: 'Login successful!' };
+      return { success: true, message: "Login successful!" };
     }
 
-    return { success: false, message: 'Invalid email or password' };
+    return { success: false, message: "Invalid email or password" };
   },
 
   logout() {
-    localStorage.removeItem('pasaFoodsLoggedIn');
-    localStorage.removeItem('pasaFoodsCurrentUser');
+    localStorage.removeItem("pasaFoodsLoggedIn");
+    localStorage.removeItem("pasaFoodsCurrentUser");
     this.updateNavbar();
-    CartManager.showToast('Logged out successfully');
+    CartManager.showToast("Logged out successfully");
   },
 
   updateNavbar() {
-    const loginBtn = document.getElementById('loginBtn');
-    const userMenu = document.getElementById('userMenu');
-    const userName = document.getElementById('userName');
+    const loginBtn = document.getElementById("loginBtn");
+    const userMenu = document.getElementById("userMenu");
+    const userName = document.getElementById("userName");
 
     if (this.isLoggedIn()) {
       const user = this.getCurrentUser();
-      if (loginBtn) loginBtn.classList.add('hidden');
+      if (loginBtn) loginBtn.classList.add("hidden");
       if (userMenu) {
-        userMenu.classList.remove('hidden');
-        if (userName) userName.textContent = user?.name || 'User';
+        userMenu.classList.remove("hidden");
+        if (userName) userName.textContent = user?.name || "User";
       }
     } else {
-      if (loginBtn) loginBtn.classList.remove('hidden');
-      if (userMenu) userMenu.classList.add('hidden');
+      if (loginBtn) loginBtn.classList.remove("hidden");
+      if (userMenu) userMenu.classList.add("hidden");
     }
-  }
+  },
 };
 
 // Modal Management
@@ -170,28 +176,28 @@ const ModalManager = {
   openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      document.body.style.overflow = 'hidden';
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      document.body.style.overflow = "hidden";
     }
   },
 
   closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      document.body.style.overflow = 'auto';
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      document.body.style.overflow = "auto";
     }
   },
 
   closeAllModals() {
-    document.querySelectorAll('.modal-overlay').forEach(modal => {
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
+    document.querySelectorAll(".modal-overlay").forEach((modal) => {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
     });
-    document.body.style.overflow = 'auto';
-  }
+    document.body.style.overflow = "auto";
+  },
 };
 
 // Food Card Renderer
@@ -213,7 +219,7 @@ function renderFoodCard(item) {
         <p class="text-gray-500 text-sm mt-1 line-clamp-2">${item.description}</p>
         <div class="flex items-center justify-between mt-4">
           <span class="text-xl font-bold text-orange-500">$${item.price.toFixed(2)}</span>
-          <button onclick="CartManager.addItem(${JSON.stringify(item).replace(/"/g, '&quot;')})" 
+          <button onclick="CartManager.addItem(${JSON.stringify(item).replace(/"/g, "&quot;")})" 
                   class="add-to-cart-btn bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full font-medium transition-colors flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -233,60 +239,69 @@ function renderCategories(containerId, activeCategory = 'All') {
 
   container.innerHTML = categories.map(cat => `
     <button onclick="filterByCategory('${cat.name}')" 
-            class="category-btn flex flex-col items-center gap-2 px-6 py-4 rounded-2xl transition-all duration-300 min-w-[100px] ${
-              activeCategory === cat.name 
-                ? 'bg-orange-500 text-white shadow-lg shadow-orange-200' 
-                : 'bg-white hover:bg-orange-50 text-gray-700 shadow-md'
-            }">
-      <span class="text-2xl">${cat.icon}</span>
+      class="category-btn flex flex-col items-center gap-2 px-6 py-4 rounded-2xl transition-all duration-300 min-w-[100px] ${
+        activeCategory === cat.name 
+          ? 'bg-orange-500 text-white shadow-lg shadow-orange-200' 
+          : 'bg-white hover:bg-orange-50 text-gray-700 shadow-md'
+      }">
+
+      <img src="${cat.icon}" 
+           alt="${cat.name}" 
+           class="w-12 h-12 object-cover rounded-full">
+
       <span class="font-medium text-sm whitespace-nowrap">${cat.name}</span>
     </button>
   `).join('');
 }
 
 // Filter by Category
-let currentCategory = 'All';
+let currentCategory = "All";
 
 function filterByCategory(category) {
   currentCategory = category;
-  renderCategories('categoriesContainer', category);
-  renderFoodItems('foodItemsContainer', category);
+  renderCategories("categoriesContainer", category);
+  renderFoodItems("foodItemsContainer", category);
 }
 
 // Render Food Items
-function renderFoodItems(containerId, category = 'All') {
+function renderFoodItems(containerId, category = "All") {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const filteredItems = category === 'All' 
-    ? foodItems 
-    : foodItems.filter(item => item.category === category);
+  const filteredItems =
+    category === "All"
+      ? foodItems
+      : foodItems.filter((item) => item.category === category);
 
-  container.innerHTML = filteredItems.map(item => renderFoodCard(item)).join('');
+  container.innerHTML = filteredItems
+    .map((item) => renderFoodCard(item))
+    .join("");
 }
 
 // Render Cart Page
 function renderCartPage() {
-  const cartContainer = document.getElementById('cartItemsContainer');
-  const subtotalEl = document.getElementById('subtotal');
-  const totalEl = document.getElementById('total');
-  const emptyCartEl = document.getElementById('emptyCart');
-  const cartContentEl = document.getElementById('cartContent');
+  const cartContainer = document.getElementById("cartItemsContainer");
+  const subtotalEl = document.getElementById("subtotal");
+  const totalEl = document.getElementById("total");
+  const emptyCartEl = document.getElementById("emptyCart");
+  const cartContentEl = document.getElementById("cartContent");
 
   if (!cartContainer) return;
 
   const cart = CartManager.getCart();
 
   if (cart.length === 0) {
-    if (emptyCartEl) emptyCartEl.classList.remove('hidden');
-    if (cartContentEl) cartContentEl.classList.add('hidden');
+    if (emptyCartEl) emptyCartEl.classList.remove("hidden");
+    if (cartContentEl) cartContentEl.classList.add("hidden");
     return;
   }
 
-  if (emptyCartEl) emptyCartEl.classList.add('hidden');
-  if (cartContentEl) cartContentEl.classList.remove('hidden');
+  if (emptyCartEl) emptyCartEl.classList.add("hidden");
+  if (cartContentEl) cartContentEl.classList.remove("hidden");
 
-  cartContainer.innerHTML = cart.map(item => `
+  cartContainer.innerHTML = cart
+    .map(
+      (item) => `
     <div class="cart-item flex items-center gap-4 bg-white p-4 rounded-xl shadow-sm">
       <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg">
       <div class="flex-1">
@@ -312,7 +327,9 @@ function renderCartPage() {
         </svg>
       </button>
     </div>
-  `).join('');
+  `,
+    )
+    .join("");
 
   const subtotal = CartManager.getTotal();
   const deliveryFee = cart.length > 0 ? 2.99 : 0;
@@ -335,55 +352,55 @@ function removeCartItem(itemId) {
 // Checkout Handler
 function handleCheckout() {
   if (!AuthManager.isLoggedIn()) {
-    CartManager.showToast('Please login to checkout');
-    ModalManager.openModal('loginModal');
+    CartManager.showToast("Please login to checkout");
+    ModalManager.openModal("loginModal");
     return;
   }
 
   const cart = CartManager.getCart();
   if (cart.length === 0) {
-    CartManager.showToast('Your cart is empty');
+    CartManager.showToast("Your cart is empty");
     return;
   }
 
   // Simulate order placement
   CartManager.clearCart();
   renderCartPage();
-  CartManager.showToast('Order placed successfully! 🎉');
+  CartManager.showToast("Order placed successfully! 🎉");
 }
 
 // Form Handlers
 function handleLogin(event) {
   event.preventDefault();
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
 
   const result = AuthManager.login(email, password);
-  
+
   if (result.success) {
-    ModalManager.closeModal('loginModal');
+    ModalManager.closeModal("loginModal");
     CartManager.showToast(result.message);
-    document.getElementById('loginForm').reset();
+    document.getElementById("loginForm").reset();
   } else {
-    showFormError('loginError', result.message);
+    showFormError("loginError", result.message);
   }
 }
 
 function handleRegister(event) {
   event.preventDefault();
-  const name = document.getElementById('registerName').value;
-  const email = document.getElementById('registerEmail').value;
-  const password = document.getElementById('registerPassword').value;
+  const name = document.getElementById("registerName").value;
+  const email = document.getElementById("registerEmail").value;
+  const password = document.getElementById("registerPassword").value;
 
   const result = AuthManager.register(name, email, password);
-  
+
   if (result.success) {
-    ModalManager.closeModal('registerModal');
-    ModalManager.openModal('loginModal');
+    ModalManager.closeModal("registerModal");
+    ModalManager.openModal("loginModal");
     CartManager.showToast(result.message);
-    document.getElementById('registerForm').reset();
+    document.getElementById("registerForm").reset();
   } else {
-    showFormError('registerError', result.message);
+    showFormError("registerError", result.message);
   }
 }
 
@@ -391,40 +408,40 @@ function showFormError(elementId, message) {
   const errorEl = document.getElementById(elementId);
   if (errorEl) {
     errorEl.textContent = message;
-    errorEl.classList.remove('hidden');
-    setTimeout(() => errorEl.classList.add('hidden'), 3000);
+    errorEl.classList.remove("hidden");
+    setTimeout(() => errorEl.classList.add("hidden"), 3000);
   }
 }
 
 // Mobile Menu Toggle
 function toggleMobileMenu() {
-  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileMenu = document.getElementById("mobileMenu");
   if (mobileMenu) {
-    mobileMenu.classList.toggle('hidden');
+    mobileMenu.classList.toggle("hidden");
   }
 }
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   CartManager.updateCartBadge();
   AuthManager.updateNavbar();
 
   // Initialize home page
-  if (document.getElementById('categoriesContainer')) {
-    renderCategories('categoriesContainer', 'All');
+  if (document.getElementById("categoriesContainer")) {
+    renderCategories("categoriesContainer", "All");
   }
-  if (document.getElementById('foodItemsContainer')) {
-    renderFoodItems('foodItemsContainer', 'All');
+  if (document.getElementById("foodItemsContainer")) {
+    renderFoodItems("foodItemsContainer", "All");
   }
 
   // Initialize cart page
-  if (document.getElementById('cartItemsContainer')) {
+  if (document.getElementById("cartItemsContainer")) {
     renderCartPage();
   }
 
   // Close modals on backdrop click
-  document.querySelectorAll('.modal-overlay').forEach(modal => {
-    modal.addEventListener('click', (e) => {
+  document.querySelectorAll(".modal-overlay").forEach((modal) => {
+    modal.addEventListener("click", (e) => {
       if (e.target === modal) {
         ModalManager.closeAllModals();
       }
@@ -432,8 +449,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Close modals on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
       ModalManager.closeAllModals();
     }
   });
