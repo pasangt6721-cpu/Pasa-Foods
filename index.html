@@ -1,78 +1,399 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Pasa Foods</title>
-    <link href="./dist/output.css" rel="stylesheet">
-    <script type="module" src="./app.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pasa Foods - Fast & Fresh Food Delivery</title>
+  <meta name="description" content="Order delicious food online with Pasa Foods. Fast delivery, fresh ingredients, and amazing taste!">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    
+    /* Custom Animations */
+    @keyframes slide-up {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fade-out {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    .animate-slide-up { animation: slide-up 0.3s ease-out; }
+    .animate-fade-out { animation: fade-out 0.3s ease-out forwards; }
+    
+    /* Hide scrollbar but allow scrolling */
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* Line clamp */
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+  </style>
 </head>
+<body class="bg-gray-50 font-sans">
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 bg-white shadow-sm z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-2">
+          <div class="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center">
+            <span class="text-white text-xl">🍽️</span>
+          </div>
+          <span class="text-xl font-bold text-gray-800">pasa<span class="text-orange-500">-foods</span></span>
+        </a>
 
-<body class="bg-gray-50 text-gray-800">
-
-    <!-- Responsive Sticky Navbar -->
-    <nav class="sticky top-0 z-50 bg-white shadow-md">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-
-            <!-- Logo -->
-            <a href="index.html" class="text-2xl font-bold text-orange-600">pasa-foods</a>
-
-            <!-- Desktop Links -->
-            <ul class="hidden md:flex space-x-8 font-medium items-center">
-                <li><a href="index.html" class="text-orange-600 border-b-2 border-orange-600">Home</a></li>
-                <li><a href="menu.html" class="hover:text-orange-600 transition-colors">Menu</a></li>
-                <li><a href="about.html" class="hover:text-orange-600 transition-colors">About</a></li>
-                <li><a href="contact.html" class="hover:text-orange-600 transition-colors">Contact</a></li>
-            </ul>
-
-            <!-- Right Actions -->
-            <div class="flex items-center space-x-6">
-                <!-- Cart Icon -->
-                <a href="cart.html" class="relative group">
-                    <img src="./assets/frontend_assets/basket_icon.png" alt="Cart" class="w-7 h-7">
-                    <span
-                        class="absolute -top-2 -right-2 bg-orange-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
-                </a>
-
-                <!-- Login Button -->
-                <a href="#"
-                    class="hidden md:block px-6 py-2 border border-orange-600 text-orange-600 rounded-full hover:bg-orange-50 transition-colors">Login</a>
-
-                <!-- Mobile Menu Button (Hamburger) -->
-                <button class="md:hidden text-gray-700 focus:outline-none">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16m-7 6h7" />
-                    </svg>
-                </button>
-            </div>
+        <!-- Desktop Nav Links -->
+        <div class="hidden md:flex items-center gap-8">
+          <a href="index.html" class="text-orange-500 font-medium">Home</a>
+          <a href="menu.html" class="text-gray-600 hover:text-orange-500 transition-colors">Menu</a>
+          <a href="cart.html" class="text-gray-600 hover:text-orange-500 transition-colors relative">
+            Cart
+            <span class="cart-badge absolute -top-2 -right-4 w-5 h-5 bg-orange-500 text-white text-xs rounded-full items-center justify-center hidden">0</span>
+          </a>
         </div>
-    </nav>
 
-    <!-- Page Content -->
-    <main>
-        <!-- Hero Section -->
-        <header id="hero-section" class="relative bg-gray-50 overflow-hidden">
-            <!-- Content injected by app.js -->
-        </header>
+        <!-- Right Section -->
+        <div class="flex items-center gap-4">
+          <!-- Cart Icon (Mobile) -->
+          <a href="cart.html" class="md:hidden relative p-2">
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            <span class="cart-badge absolute top-0 right-0 w-5 h-5 bg-orange-500 text-white text-xs rounded-full items-center justify-center hidden">0</span>
+          </a>
 
-        <!-- Category Section -->
-        <section id="explore-menu" class="container mx-auto px-4 py-12">
-            <div class="text-center mb-10 text-white">
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">Explore our menu</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Choose from a diverse menu featuring a delectable array of
-                    dishes crafted with the finest ingredients and culinary expertise.</p>
+          <!-- Login Button -->
+          <button id="loginBtn" onclick="ModalManager.openModal('loginModal')" class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-full font-medium transition-all hover:shadow-lg hover:shadow-orange-200">
+            Login
+          </button>
+
+          <!-- User Menu (When Logged In) -->
+          <div id="userMenu" class="hidden items-center gap-3">
+            <div class="flex items-center gap-2">
+              <div class="w-9 h-9 bg-orange-100 rounded-full flex items-center justify-center">
+                <span class="text-orange-500 font-semibold" id="userName">U</span>
+              </div>
             </div>
+            <button onclick="AuthManager.logout()" class="text-gray-600 hover:text-red-500 transition-colors text-sm font-medium">
+              Logout
+            </button>
+          </div>
 
-            <div id="category-list"
-                class="flex md:grid md:grid-cols-4 lg:grid-cols-8 gap-8 overflow-x-auto pb-6 scrollbar-hide px-2">
-                <!-- Categories injected by app.js -->
+          <!-- Mobile Menu Button -->
+          <button onclick="toggleMobileMenu()" class="md:hidden p-2">
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobileMenu" class="hidden md:hidden pb-4">
+        <div class="flex flex-col gap-2">
+          <a href="index.html" class="px-4 py-2 text-orange-500 font-medium rounded-lg bg-orange-50">Home</a>
+          <a href="menu.html" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">Menu</a>
+          <a href="cart.html" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">Cart</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-orange-500 to-orange-600 min-h-[400px] md:min-h-[500px]">
+        <div class="absolute inset-0">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=600&fit=crop" 
+               alt="Delicious Food" 
+               class="w-full h-full object-cover opacity-30">
+        </div>
+        <div class="relative z-10 flex flex-col items-center justify-center text-center p-8 md:p-16 min-h-[400px] md:min-h-[500px]">
+          <span class="bg-white/20 text-white px-4 py-1 rounded-full text-sm font-medium mb-4 backdrop-blur-sm">
+            🚀 Free Delivery on First Order
+          </span>
+          <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">
+            Fast & Fresh Food<br>Delivered to You
+          </h1>
+          <p class="text-white/90 text-lg md:text-xl mb-8 max-w-xl">
+            Explore our delicious menu and order your favorite meals with just a few clicks
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="menu.html" class="bg-white text-orange-500 px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl transition-all hover:scale-105">
+              Order Now
+            </a>
+            <a href="#categories" class="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white/10 transition-all">
+              Explore Menu
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm">
+          <div class="text-3xl font-bold text-orange-500">15K+</div>
+          <div class="text-gray-500 text-sm mt-1">Happy Customers</div>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm">
+          <div class="text-3xl font-bold text-orange-500">50+</div>
+          <div class="text-gray-500 text-sm mt-1">Menu Items</div>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm">
+          <div class="text-3xl font-bold text-orange-500">30min</div>
+          <div class="text-gray-500 text-sm mt-1">Avg Delivery</div>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm">
+          <div class="text-3xl font-bold text-orange-500">4.9★</div>
+          <div class="text-gray-500 text-sm mt-1">Rating</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section id="categories" class="py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Browse Categories</h2>
+          <p class="text-gray-500 mt-1">Choose from our wide variety of cuisines</p>
+        </div>
+        <a href="menu.html" class="hidden md:flex items-center gap-2 text-orange-500 font-medium hover:underline">
+          View All
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+      <div id="categoriesContainer" class="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
+        <!-- Categories will be rendered by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Items Section -->
+  <section class="py-12 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Popular Items</h2>
+          <p class="text-gray-500 mt-1">Most ordered dishes this week</p>
+        </div>
+        <a href="menu.html" class="flex items-center gap-2 text-orange-500 font-medium hover:underline">
+          See All
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+      <div id="foodItemsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Food items will be rendered by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Why Choose Us?</h2>
+        <p class="text-gray-500 mt-2">We deliver more than just food</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-lg transition-shadow">
+          <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="text-3xl">🚀</span>
+          </div>
+          <h3 class="font-bold text-xl text-gray-800 mb-2">Fast Delivery</h3>
+          <p class="text-gray-500">Get your food delivered in 30 minutes or less, hot and fresh!</p>
+        </div>
+        <div class="bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-lg transition-shadow">
+          <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="text-3xl">🍳</span>
+          </div>
+          <h3 class="font-bold text-xl text-gray-800 mb-2">Fresh Ingredients</h3>
+          <p class="text-gray-500">We use only the freshest ingredients for every dish we prepare</p>
+        </div>
+        <div class="bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-lg transition-shadow">
+          <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="text-3xl">💝</span>
+          </div>
+          <h3 class="font-bold text-xl text-gray-800 mb-2">Best Prices</h3>
+          <p class="text-gray-500">Enjoy delicious meals at affordable prices with great deals</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center">
+              <span class="text-white text-xl">🍽️</span>
             </div>
-            <hr class="my-10 border-gray-200 h-0.5 bg-gray-200 border-none mx-4">
-        </section>
-    </main>
+            <span class="text-xl font-bold">pasa<span class="text-orange-500">-foods</span></span>
+          </div>
+          <p class="text-gray-400 text-sm">Delivering happiness to your doorstep since 2024</p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Quick Links</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="index.html" class="hover:text-orange-500 transition-colors">Home</a></li>
+            <li><a href="menu.html" class="hover:text-orange-500 transition-colors">Menu</a></li>
+            <li><a href="cart.html" class="hover:text-orange-500 transition-colors">Cart</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Support</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="#" class="hover:text-orange-500 transition-colors">FAQ</a></li>
+            <li><a href="#" class="hover:text-orange-500 transition-colors">Contact Us</a></li>
+            <li><a href="#" class="hover:text-orange-500 transition-colors">Terms of Service</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Contact</h4>
+          <ul class="space-y-2 text-gray-400 text-sm">
+            <li>📍 123 Food Street, City</li>
+            <li>📞 +1 234 567 890</li>
+            <li>✉️ hello@pasafoods.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
+        © 2024 Pasa Foods. All rights reserved.
+      </div>
+    </div>
+  </footer>
 
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal-overlay fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-slide-up">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Welcome Back!</h2>
+        <button onclick="ModalManager.closeModal('loginModal')" class="text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="loginEmail" required
+                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                   placeholder="you@example.com">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="loginPassword" required
+                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                   placeholder="••••••••">
+          </div>
+          <p id="loginError" class="text-red-500 text-sm hidden"></p>
+          <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition-colors">
+            Login
+          </button>
+        </div>
+      </form>
+      <p class="text-center text-gray-500 mt-6">
+        Don't have an account?
+        <button onclick="ModalManager.closeModal('loginModal'); ModalManager.openModal('registerModal')" class="text-orange-500 font-medium hover:underline">
+          Register
+        </button>
+      </p>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="registerModal" class="modal-overlay fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-slide-up">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Create Account</h2>
+        <button onclick="ModalManager.closeModal('registerModal')" class="text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <form id="registerForm" onsubmit="handleRegister(event)">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <input type="text" id="registerName" required
+                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                   placeholder="John Doe">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="registerEmail" required
+                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                   placeholder="you@example.com">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="registerPassword" required minlength="6"
+                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                   placeholder="••••••••">
+          </div>
+          <p id="registerError" class="text-red-500 text-sm hidden"></p>
+          <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition-colors">
+            Create Account
+          </button>
+        </div>
+      </form>
+      <p class="text-center text-gray-500 mt-6">
+        Already have an account?
+        <button onclick="ModalManager.closeModal('registerModal'); ModalManager.openModal('loginModal')" class="text-orange-500 font-medium hover:underline">
+          Login
+        </button>
+      </p>
+    </div>
+  </div>
+
+  <script src="assets.js"></script>
+  <script src="app.js"></script>
 </body>
-
 </html>

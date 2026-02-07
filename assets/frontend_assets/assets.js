@@ -57,6 +57,18 @@ export const menu_list = [
         menu_image: basePath + 'menu_8.png'
     }]
 
+
+// Food Categories
+const categories = [
+  { id: 1, name: "All", icon: "🍽️" },
+  { id: 2, name: "Pizza", icon: "🍕" },
+  { id: 3, name: "Burgers", icon: "🍔" },
+  { id: 4, name: "Sushi", icon: "🍱" },
+  { id: 5, name: "Salads", icon: "🥗" },
+  { id: 6, name: "Desserts", icon: "🍰" },
+  { id: 7, name: "Drinks", icon: "🥤" },
+  { id: 8, name: "Pasta", icon: "🍝" }
+];
 export const food_list = [
     {
         _id: "1",
